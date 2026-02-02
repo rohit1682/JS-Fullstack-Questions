@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Debounce & Throttle Without Lodash</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .log {
+      margin-top: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔍 Debounced Search Bar (Plain JS)</h2>
+  <input type="text" id="searchInput" placeholder="Type to search..." />
+  <div class="log" id="searchLog"></div>
+
+  <hr />
+
+  <h2>📜 Throttled Scroll Logger (Plain JS)</h2>
+  <div style="height: 2000px;">Scroll down to see throttling in action...</div>
+
+  <script>
+    // ---------------- Debounce ----------------
+    function debounce(fn, delay) {
+      let timerId;
+
+      return function (...args) {
+        const context = this;
+        clearTimeout(timerId);
+
+        timerId = setTimeout(() => {
+          fn.apply(context, args);
+        }, delay);
+      };
+    }
+
+    // ---------------- Throttle ----------------
+    function throttle(fn, limit) {
+      let lastCall = 0;
+
+      return function (...args) {
+        const context = this;
+        const now = Date.now();
+
+        if (now - lastCall >= limit) {
+          lastCall = now;
+          fn.apply(context, args);
+        }
+      };
+    }
+
+    // ---------------- Search Bar ----------------
+    const searchInput = document.getElementById("searchInput");
+    const searchLog = document.getElementById("searchLog");
+
+    function searchAPI(query) {
+      searchLog.textContent = `Searching for: "${query}" at ${new Date().toLocaleTimeString()}`;
+      console.log("API Call:", query);
+    }
+
+    const debouncedSearch = debounce(searchAPI, 300);
+
+    searchInput.addEventListener("input", (e) => {
+      const query = e.target.value.trim();
+      debouncedSearch(query);
+    });
+
+    // ---------------- Scroll Handler ----------------
+    const throttledScroll = throttle(() => {
+      console.log("Scroll position:", window.scrollY);
+    }, 1000);
+
+    window.addEventListener("scroll", throttledScroll);
+  </script>
+
+</body>
+</html>
