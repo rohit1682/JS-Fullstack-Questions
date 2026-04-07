@@ -1,0 +1,34 @@
+backedn code -> image
+image runs in a container
+image container can be run in following ways: either docker or aws ecs [elactic container service]
+
+what is networking?
+
+
+
+
+AWS wants to manage many services
+
+
+ECS - replication of docker
+EKS - replication of kubernetes
+
+Dynamo db is a no sql db which stores data using key value pair and is serverless.
+It is called serverless because we dont need to manage the instance of any db. we dont need to create reader or writer instance.
+Dynamo db has a drawback that if the db has 1gb of data but it needs to scan 1kb of data, it will run for the entire storage which increases the cost and latency.
+partition keys work as primary key and indexes work as secondary keys.
+
+
+S3 is simple storage service -> worlds most cheapest way to store data.
+we can create buckets
+we can store any types of data
+it is region specific
+s3 is used in auditing, ott platforms, static content websites
+
+
+lambda is serverless -> there is no server actively listening to any code.
+lambdas gets triggered when there is an api call or an event getting emitted.
+it is stateless -> triggers, does the job and then gets destroys and forgets everything
+it can have the max computation memory power of 4gb
+
+cloudwatch -> it is used for loggin and monitoring tool. 

@@ -1,0 +1,1044 @@
+/********************************************/
+/**
+* JS
+* Data types + code snippet
+* let/var/const + scope + code snippet
+* hoisting + code snippet
+* functions- normal vs arrow, high order fn, callback fn, call ,apply, bind
+* this + code snippet
+* closure + code snippet
+* promises + promises fn + code snippet
+* async...await + code snippet
+* Array functions: map vs filter vs forEach vs reduce
+* different ways to copy an object
+* DOM
+* How to add event to an element
+* event bubbling + event capturing
+* stopPropagation vs preventDefault
+* event delegation
+* window vs document
+* code snippet:
+*  program: addition of the numbers present in the string, using in-built methods
+    const str = 'AB_12_CD_23_EF_20';
+    o/p- 55 //12 + 23 + 20;
+*/
+
+/********************************************/
+"10" - 1 + "0";
+null == undefined;
+null === undefined;
+null == 0;
+"" == 0;
+"" == null;
+[] == [];
+Symbol("first") == Symbol("first");
+
+/********************************************/
+console.log("1", abc);
+var abc = 10;
+
+function abc() {
+  console.log("2");
+}
+console.log("3", abc);
+
+abc = 100;
+console.log("4", abc);
+
+abc = function () {
+  console.log("5");
+};
+console.log("6", abc);
+
+abc();
+
+/********************************************/
+var a = 100;
+function abc() {
+  var x = 300;
+  y = 200;
+  let z = 2300;
+  {
+    let z = 100;
+    console.log(z);
+  }
+  console.log(x);
+  console.log(y);
+  console.log(z);
+  console.log(a);
+}
+abc();
+console.log(y);
+console.log(x);
+
+/********************************************/
+const person = {
+  name: "john doe",
+  addr1: {
+    city: "city",
+    state: "state",
+    getAddr: function () {
+      console.log(this);
+    },
+  },
+  addr2: {
+    city: "another city",
+    state: "another state",
+    getAddr: () => {
+      console.log(this);
+    },
+    getAddr2: function () {
+      return () => {
+        console.log(this);
+      };
+    },
+  },
+};
+
+person.addr2.getAddr2()();
+person.addr1.getAddr();
+person.addr2.getAddr();
+
+/********************************************/
+let fn = add(10);
+fn(10); // 20
+fn(20); // 40
+fn(60); // 100
+
+/********************************************/
+console.log("1");
+let p = new Promise((resolve, reject) => {
+  console.log("2");
+  console.log("3");
+  resolve("4");
+  console.log("5");
+  resolve("6");
+  console.log("7");
+  reject("8");
+  console.log("9");
+});
+
+console.log("10");
+p.then((d) => console.log(d)).catch((e) => console.log(e));
+console.log("11");
+
+/********************************************/
+async function test() {
+  console.log("start");
+  await setTimeout(() => console.log("logging"), 5000);
+  console.log("end");
+}
+
+test();
+
+/********************************************/
+const arr = [
+  100,
+  true,
+  "Hello",
+  false,
+  "",
+  () => {},
+  undefined,
+  null,
+  0,
+  {},
+  [],
+];
+
+let res = arr.map((v) => v);
+console.log("MAP:", res);
+res = arr.filter((v) => v);
+console.log("FILTER:", res);
+res = arr.forEach((v) => v);
+console.log("FOREACH:", res);
+res = arr.reduce((acc, v) => v);
+console.log("REDUCE:", res);
+
+/********************************************/
+console.log("begins"); // 1
+
+setTimeout(() => {
+  console.log("setTimeout 1");
+  Promise.resolve().then(() => {
+    console.log("promise 1");
+  });
+}, 0);
+
+new Promise(function (resolve, reject) {
+  console.log("promise 2"); //2
+  setTimeout(function () {
+    console.log("setTimeout 2"); //4
+    resolve("resolve 1");
+    console.log("log-1"); //5
+    resolve("resolve 2");
+    reject("resolve 3");
+    console.log("log-2"); //6
+  }, 0);
+  console.log("promise 202"); // 3
+})
+  .then((res) => {
+    console.log("dot then 1"); // 7
+    setTimeout(() => {
+      console.log("setTimeout 3"); //8
+      console.log(res);
+    }, 0);
+  })
+  .catch((e) => {
+    console.log("dot catch 1");
+    setTimeout(() => {
+      console.log("setTimeout 4");
+      console.log(e);
+    }, 0);
+  })
+  .finally(() => {
+    console.log("dot finally 1"); //9
+    setTimeout(() => {
+      console.log("setTimeout 5"); //10
+    }, 0);
+  });
+
+console.log("ends"); // 4
+
+/********************************************/
+
+console.log("begins");
+
+setTimeout(() => {
+  console.log("setTimeout 1");
+  Promise.resolve().then(() => {
+    console.log("promise 1");
+  });
+}, 0);
+
+new Promise(function (resolve, reject) {
+  console.log("promise 2");
+  setTimeout(function () {
+    console.log("setTimeout 2");
+    resolve("resolve 1");
+    console.log("log-1");
+    resolve("resolve 2");
+    reject("resolve 3");
+    console.log("log-2");
+  }, 0);
+  console.log("promise 202");
+})
+  .then((res) => {
+    console.log("dot then 1");
+    setTimeout(() => {
+      console.log("setTimeout 3");
+      console.log(res);
+    }, 0);
+  })
+  .catch((e) => {
+    console.log("dot catch 1");
+    setTimeout(() => {
+      console.log("setTimeout 4");
+      console.log(e);
+    }, 0);
+  })
+  .finally(() => {
+    console.log("dot finally 1");
+    setTimeout(() => {
+      console.log("setTimeout 5");
+    }, 0);
+  });
+
+console.log("ends");
+
+console.log("A"); //1
+
+setTimeout(() => {
+  console.log("B"); //6
+}, 1000);
+
+let promise = new Promise((resolve, reject) => {
+  console.log("C"); //2
+  reject("Reject");
+  resolve("Resolve");
+  console.log("F"); //3
+});
+
+console.log("D"); // 4
+
+promise.then(() => {
+  console.log("E");
+});
+
+promise.catch(() => {
+  console.log("F"); //5
+});
+
+-------------------------------------->
+
+var x = 23;
+
+(function(){
+
+  var x = 43;
+
+  (function random(){
+
+    x++;
+
+    console.log(x);
+
+    var x = 21;
+
+  })();
+
+})();
+ 
+------------------------------------> 
+const b = {
+
+name:"vivek",
+
+f: function(){
+
+  var self = this;
+
+  console.log(this); //object b
+
+  console.log(this.name);   //vivek
+
+  (function(){
+
+      console.log(this);    //function -prototype anonymous scope
+
+    console.log(this.name); //undefined
+
+    console.log(self.name); //vivek
+
+  })();
+
+  }
+
+}
+
+b.f();
+ 
+---------------------
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+let data = [
+
+  {
+
+    "a": 1,
+
+    "b": 3
+
+  },
+
+  {
+
+    "a": 3,
+
+    "b": 2
+
+  },
+
+  {
+
+    "a": 2,
+
+    "b": 40
+
+  },
+
+  {
+
+    "a": 4,
+
+    "b": 12
+
+  }
+
+];
+ 
+function test(data){
+
+    return data.sort((a ,b) => b['a']-a['a']);
+
+}
+ 
+console.log(test(data));
+
+/*should return:
+ 
+[
+
+  {
+
+    "a": 4,
+
+    "b": 12
+
+  },
+
+  {
+
+    "a": 3,
+
+    "b": 2
+
+  },
+
+  {
+
+    "a": 2,
+
+    "b": 40
+
+  },
+
+  {
+
+    "a": 1,
+
+    "b": 3
+
+  }
+
+]*/
+ 
+sort in ascending according to a property 
+ 
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+Interview experience 
+Duration : 1.5hr 
+Topic wise question : 
+HTML 
+Sematic Vs non sematic 
+<b> vs <strong> 
+Diff between inline, internal, and external CSS?
+how to calc CSS specificity
+CSS Box Model
+box-sizing: content-box vs border-box
+Flexbox vs Grid?
+static, relative, absolute, fixed, and sticky
+pseudo-classes and pseudo-elements
+ 
+React: 
+JSX ? Why ? advantages ? 
+useCallback hook , applications ? 
+middleware in redux , redux thunk 
+use of React Portals,
+why to use key prop in react 
+virtual DOM advantages 
+React element vs  React component?
+HOC in react
+ 
+JS
+Is JavaScript a synchronous or asynchronous language? How? 
+hoisting in JavaScript, and how do var, let, and const differ in terms of hoisting behavior?
+ closures and their significance in JavaScript?
+Which ES features have you worked with, and how have they helped improve your code?
+ arrow functions vs normal functions?
+How do the rest and spread operators differ in usage and functionality?
+What is the purpose of the for...in loop in JavaScript?
+Promises  in JavaScript? How do they differ from callbacks? Could you also explain the purpose 
+event delegation, and what are the different phases of event propagation?
+use cases for Set and Map in JavaScript?
+TS
+any vs unknown
+generics use case 
+interface vs type 
+interface merging 
+utility types in TypeScript, like Pick, Omit, and Partial?
+union types vs intersection types
+advantages and disadvantages of TS 
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Review of: git, html, css, javascript, design principles, design patterns
+
+Review on Level: A1/A2
+
+Results:
+A1: 75%
+A2: 20%
+
+Strengths:
+
+git, git commands and gitlab
+html  and html basic skeleton
+what is doctype
+meta tag
+SEO and accessibility
+semantics tag div tag
+css specificity
+center a inner wrt outer div
+basic css coding
+Hello ---mouse over ---> Hello World
+what is JS
+what is event loop
+hoisting - theory correct but code snippet answer wrong
+closure
+arrow vs normal function
+different ways to create an object
+Problem statement- sum of all the numbers present in the string
+He solved it and the code was very optimized as well.
+
+
+
+
+Weaknesses:
+
+git switch vs git checkout
+merging vs rebasing - the answer needs improvement
+inline vs inline-block
+will it work- applying width and height to span tag?
+design principles- SOLID, KISS, DRY and YAGNI
+design patterns- able to explain theoretically but not able to write the code for Singleton design pattern
+shallow vs deep copy
+counter using setInterval - He understands that "clearInterval' is used to stop an interval, but he lacks the knowledge on how to implement it correctly.
+Problem statement- sort the given list of object
+he was able to solve it but his solution would only work if the key has string data if data is number it gives error.
+what would happen if promises has multiple resolve or reject statement- he is aware that promise will have one state only but don't know which state will take the precedence in the given code snippet-
+// new Promise(function (resolve, reject) {
+//   console.log('promise');
+//   reject('resolve 3');
+//   resolve('resolve 1');
+//   console.log('log-1');
+//   resolve('resolve 2');
+//   console.log('log-2');
+//   console.log('promise-2');
+// })
+
+
+Coding snippet and coding problem answers
+
+// <!--<!DOCTYPE html>-->
+// <!--<html lan="en">-->
+// <!--    <head>-->
+// <!--        <meta>-->
+// <!--        <meta>-->
+// <!--        <style>-->
+// <!--            span {-->
+// <!--                width: 500px;-->
+// <!--                height: 500px;-->
+// <!--            }-->
+
+// <!--            div {-->
+// <!--                display: inline;--> not able to tell the difference between inline and inline-block
+// <!--                display: inline-block;-->
+// <!--            }-->
+// <!--            p:hover::after{-->
+// <!--                content: "world";-->
+// <!--            }-->
+// <!--            .outer{-->
+// <!--                position: relative;-->
+// <!--            }-->
+// <!--            .inner{-->
+// <!--                position: absolute;-->
+// <!--                top: 50%;-->
+// <!--                left: 50%;-->
+// <!--                transform: translate(-50%,-50%);-->
+// <!--            }-->
+// <!--        </style>-->
+// <!--    </head>-->
+// <!--    <body>-->
+// <!--        <script>-->
+//             document.getElementByTagname('p'); // he says it will retrieve it but in actual it won't
+// <!--        </script>-->
+
+// <!--        <p>hello</p>-->
+
+// <!--hello --mouse over the text-- hello world!-->
+// <!--        <span>Hi</span>-->
+
+
+// <!--        <div id="outer">-->
+// <!--            <div id="inner"></div>-->
+// <!--        </div>-->
+
+
+//         <!--<script></script>-->
+// <!--    </body>-->-->
+// <!--</html>-->
+
+
+
+
+correct answer
+// console.log('1'); // 1
+// setTimeout(() => console.log('2')); // 3
+// console.log('3'); // 2
+
+
+
+
+wrong answer
+// test(); // error
+
+// var test = 100;
+
+// function test() {
+//     console.log('test is function');
+// }
+
+// console.log(test); // 100
+
+
+
+it is not a shallow copy but he says it is, which is wrong
+// obj = {a: 100, b: {c:200}};
+// obj1 = obj; // shallow copy
+// obj1.a = 400;
+
+
+
+solved it correctly
+// product = (a) =>(b)=>b?product(a*b):a;
+
+// console.log(product(10)(2)()) // 20
+
+// console.log(product(10)(2)(2)()) // 40
+
+
+he needs to work on "this" keyword in arrow function and normal function 
+// const person = {
+//   name: 'john doe',
+//   addr1: {
+//     city: 'city',
+//     state: 'state',
+//     getAddr: function () {
+//       console.log(this);  // person ---> this is wrong but explanation needs improvement
+//     },
+//   },
+//   addr2: {
+//     city: 'another city',
+//     state: 'another state',
+//     getAddr: () => {
+//       console.log(this);   // global--window ----> this is correct
+//     },
+//     getAddr2: function () {
+//       return () => {
+//         console.log(this);  // addr2 ----> this is correct but explanation need improvement
+//       };
+//     },
+//   },
+// };
+
+// person.addr2.getAddr2()();
+// person.addr1.getAddr();
+// person.addr2.getAddr();
+
+
+
+he was going in correct direction but does not how to stop the setInterval
+// 1
+// 1 delay
+// 2
+// 1 delay
+// 3
+// 4
+// 5
+
+// let i = 0;
+// setInterval(()=>{
+//     console.log(i++);
+//     clearInterval(()=>);
+// },1000)
+
+
+
+needs to work on witting example code for singleton pattern
+// let log = new Object();
+
+// class Logger() {
+//     // logic
+// }
+
+
+// let log = new Logger();
+
+
+
+
+he is aware that promise will have one state only but don't know which state will take the precedence in the given code snippet-
+// new Promise(function (resolve, reject) {
+//   console.log('promise');
+//   reject('resolve 3');
+//   resolve('resolve 1');
+//   console.log('log-1');
+//   resolve('resolve 2');
+//   console.log('log-2');
+//   console.log('promise-2');
+// })
+
+
+
+able to solve it correctly
+/*
+Addition of the numbers present in the string using in-built JS methods.
+str = 'AB_12_CD_23_EF_20';
+o/p- 55 
+Explanation: sum of 12 + 23 + 20 is 55;
+*/
+
+
+// ----------------------
+// function getSum(str) {
+// // write your code here...
+//   let value = str.split('_').reduce((acc,val)=>{
+//     return acc + (!isNaN(val)?Number(val):0);
+// },0);
+// console.log(value);
+// }
+
+// getSum('AB_12_CD_23_EF_20'); // 55
+
+// getSum('12_CD_23_EF_20'); // 55
+
+
+
+
+
+
+
+
+need to work on this as he took some time to solve it but his solution has limitation that it work only if the data is string for number type data it will give error.
+// const arrObj = [
+//     {
+//         name: 'john',
+//         id: 1,
+//         hobby: 'football',
+//     },
+//     {
+//         name: 'qwerty',
+//         id: 3,
+//         hobby: 'football',
+//     },
+//     {
+//         name: 'jully',
+//         id: 2,
+//         hobby: 'chess',
+//     },
+//     {
+//         name: 'jully',
+//         id: 2,
+//         hobby: 'chess',
+//     },
+//     {
+//         name: 'Mary',
+//         id: 4,
+//         hobby: 'chess',
+//     },
+//     {
+//         name: 'qwerty',
+//         id: 3,
+//         hobby: 'football',
+//     },
+//     {
+//         name: 'jully',
+//         id: 2,
+//         hobby: 'chess',
+//     },
+// ];
+
+// function sortObj(objList, key) {
+//  objList.sort((a,b)=>((typeof a[key]=='string'?a[key]:toString(a[key]))).localeCompare((typeof b[key]=='string'?b[key]:toString(b[key])));
+//  console.log(objList); 
+// }
+
+// sortObj(arrObj, 'id');
+
+
+
+
+Top required for next level:
+
+this keyword
+
+async and defer attribute in script tag OR html rendering
+promises working
+design principles
+design patterns
+
+
+
+
+Recommended reading / modules:
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript
+https://web.dev/learn/javascript/
+
+
+
+
+Summary (Optional)
+The candidate demonstrates a strong theoretical understanding of most topics. However, when it comes to practical coding and working with code snippets, he tends to struggle and is unable to fully solve problems. Therefore, he should focus on gaining more hands-on experience with the core topics. Additionally, it's important that he is able to explain the code he writes. Without this, it may give the impression that he has merely memorized the answers, rather than truly understanding them.
+
+---------------------------------------------------------------------------------------------------------------->
+
+Techcheck:
+
+
+JavaScript TechCheck (Core + Client Side)
+
+— JavaScript Basics & Operators —
+1. What does the typeof operator do?
+2. Difference between == and ===
+3. What are JavaScript comparison operators?
+4. Explain type coercion with examples
+5. What is the result of:
+   - true + true
+   - [] == ![]
+   - NaN == NaN
+   - null >= 0
+
+— Functions —
+6. What is a function expression?
+7. Difference between function declaration and function expression
+8. Arrow function vs normal function — differences
+9. When should you use arrow functions vs normal functions?
+10. Do arrow functions have arguments object?
+11. How to accept variable arguments in arrow functions?
+12. How to pass custom arguments to an event handler?
+13. If a function is declared inside an if block, how can it be accessed outside?
+14. What is an IIFE and why is it used?
+
+— Arrays —
+15. Different ways to create arrays
+16. What does Array.from() do?
+17. What happens in: Array.from('124', "2") ?
+18. How to empty an array?
+19. Difference between:
+   - arr.length = 0
+   - arr = []
+20. If arr2 = arr and then arr.length = 0, what happens to arr2?
+21. Array methods to add elements
+22. Array methods to remove elements
+23. How to sort an array without mutating the original?
+24. Mutable vs immutable array methods
+
+— Objects —
+25. Different ways to create objects
+26. Ways to add properties to an object
+27. Ways to remove a property from an object
+28. What is hasOwnProperty?
+29. Difference between hasOwnProperty and in operator
+30. What are object property descriptors?
+31. Explain writable, enumerable, configurable
+32. What are getters and setters?
+33. Why do we use getters/setters?
+34. Nested object destructuring — how does it work?
+
+— Equality Edge Cases —
+35. Why is NaN !== NaN ?
+36. Why is null == undefined true?
+37. Why is [] == [] false?
+38. How object and array comparison works
+
+— Timers —
+39. What does setTimeout return?
+40. Can setTimeout be deleted?
+41. Difference between setTimeout and setInterval
+42. How to cancel timers
+
+— Promises & Async —
+43. What is a Promise?
+44. Promise states
+45. Promise chaining
+46. What does finally() do in Promise?
+47. How to handle Promise errors without catch()
+48. What is async/await?
+49. Does async function always return a Promise?
+50. How errors propagate in async functions
+51. What errors try/catch cannot handle?
+52. How errors transfer to parent function
+53. Sync vs async error propagation
+
+— Client-Side JavaScript —
+54. What is client-side JavaScript?
+55. Difference between DOM and BOM
+
+— Browser Object Model (BOM) —
+56. What is BOM?
+57. Common BOM methods
+58. Window object methods
+59. History object methods
+60. Navigator object
+61. Screen object
+
+— Location Object —
+62. How to get current URL using location object
+63. Location parts: href, host, pathname, search, hash
+64. Difference between assign, replace, href
+65. How to redirect user
+66. How to redirect and prevent going back
+67. How to redirect if previous page is unknown
+68. Use of document.referrer
+69. Use of history.length
+
+— DOM —
+70. What is DOM?
+71. DOM selection methods
+72. DOM manipulation methods
+73. Create/remove elements
+74. DOM traversal methods
+
+— DOM Selection APIs —
+75. getElementsByClassName vs querySelectorAll
+76. Live vs static collections
+
+— Events —
+77. Browser event phases: capturing, target, bubbling
+78. Event bubbling vs capturing
+79. Event delegation
+80. stopPropagation vs preventDefault
+
+— Form & Button Handling —
+81. How to attach function to button click
+82. Ways to add click handler
+83. How to pass arguments to click handler
+84. How to prevent page reload on form submit
+85. event.preventDefault usage
+86. Button type submit vs button
+
+
+
+Node.js Technical Interview Questions
+
+1. How can we make an object immutable in JavaScript?
+2. What are the disadvantages of structuredClone?
+3. What is JSON.stringify and its limitations?
+4. What are property descriptors in JavaScript?
+5. Difference between Map and WeakMap.
+6. What is a prototype in JavaScript?
+7. Does a class have a prototype?
+8. What is **proto**?
+9. Do functions have a prototype?
+10. Do different functions share the same prototype?
+11. What is the "this" keyword in JavaScript?
+12. How can we change "this" to window?
+13. Difference between arrow functions and regular functions.
+14. How to generate package.json?
+15. How to enable ECMAScript modules in Node.js?
+16. Common npm commands.
+17. How to access command-line arguments in Node (node script.js arg1 arg2)?
+18. How to access environment variables in Node.js?
+19. Difference between package.json and package-lock.json.
+20. What are devDependencies?
+21. What is Semantic Versioning (SemVer)?
+22. What does the ^ symbol mean in package.json?
+23. How to publish packages to a private registry?
+24. What files are used to lock dependencies?
+25. What happens when we run only "node" command?
+26. Types of modules in Node.js (CommonJS vs ES Modules).
+27. What is the Node.js event loop?
+28. What is libuv?
+29. What are the phases of the event loop?
+30. Which operations run in the poll phase?
+31. What is Promise.allSettled()?
+32. What is the error-first callback pattern?
+33. What is EventEmitter in Node.js?
+34. How to listen to an event only once?
+35. How many listeners can be registered for an event?
+36. Can async functions be used as event handlers?
+37. Best way to read a large file in Node.js.
+38. Types of streams in Node.js.
+39. Can we read and write to the same file using streams?
+40. What is backpressure in streams?
+41. Which Node API can transfer data from one file to another?
+42. Can we create our own npm packages?
+43. How to give private package access to a whole team?
+44. What is .npmrc?
+45. What is REST?
+46. What is HATEOAS?
+47. Difference between HTTP and HTTPS.
+48. Difference between HTTP/2 and HTTP/3.
+49. How is error handling done in Node.js?
+50. How to create a custom error class?
+51. Can we extend classes other than Error for custom errors?
+52. Difference between Express and NestJS.
+53. What is middleware in Express?
+54. Can multiple middleware run on the same route?
+55. Can middleware pass data to other middleware?
+56. What is a route in Express?
+57. What are SOLID principles?
+58. What design principles should be followed in Node.js?
+59. What architectural patterns are used in Node.js?
+60. What is the testing pyramid?
+61. Why do we need the testing pyramid?
+62. Difference between jest.mock() and jest.spyOn().
+63. What types of testing are used in Node.js?
+
+
+TS Interview Questions:
+
+
+1. What is TypeScript?
+2. What is object?
+3. Data types in TypeScript
+4. Is Array a type in TypeScript?
+5. What is `void`?
+6. What does a `void` function return?
+7. Difference between `void` and `undefined` return types
+8. Can we return something from a `void` function?
+9. What is `enum`?
+10. What happens if we assign a custom value in enum (e.g., Up = 12)?
+11. How does enum look after compilation to JavaScript?
+12. How enum is compiled in TypeScript?
+13. What is Array in TypeScript?
+14. Difference between `number` and `Number`
+15. What is `[string]`?
+16. What is Tuple?
+17. What is `Record`?
+18. What is a Function in TypeScript?
+19. How to handle multiple input types in a function (`fun(1)`, `fun("as")`)?
+20. Can we use generics for handling multiple types?
+21. How to restrict function so `fun([])` gives error?
+22. Difference between `type` and `interface`
+23. What is interface merging?
+24. What is index signature?
+25. What is a class in TypeScript?
+26. What is `private` keyword?
+27. What are getters and setters?
+28. What is static property?
+29. Difference between Union and Intersection
+30. Example: Circle and Square with `getArea`
+31. What is `Partial`?
+32. What is opposite of `Partial`?
+33. How to prevent updating an interface property?
+34. What are utility types?
+35. Where to apply `Readonly<T>`?
+36. How to pick only one property from a type?
+37. How to pick multiple properties from a type?
+38. What is opposite of `Pick`?
+39. How to define return type as array of strings?
+40. How utility types are applied?
+41. Which utility type is used for return type? (`ReturnType<T>`)
+42. Which utility type is used for function parameters? (`Parameters<T>`)
+43. What is `Exclude<T, U>` utility type?
+44. How to extract function parameter type?
+45. Utility types for string literals (`"a"`, `"b"`)
+46. What are decorators?
+47. Types of decorators
+48. What is `@Logger()` vs `@Logger`?
+49. Execution order of multiple decorators
+50. What is type guard?
+51. Other ways of type narrowing
+52. What is assertion function?
+53. What is type casting?
+54. Disadvantages of `as`
+55. What is `satisfies`?
+56. What is mapped type?
+57. Explain custom `Partial` using mapped types
+58. What is `infer`?
+59. What is `tsconfig.json`?
+60. What is module in TypeScript?
+61. What does `strict: true` mean in tsconfig?
+62. Rest code snippets...........
