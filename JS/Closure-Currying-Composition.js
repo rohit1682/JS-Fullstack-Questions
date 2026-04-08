@@ -1,8 +1,8 @@
-Closure Example:
+// Closure Example:
 
 function tempClosure() {
 	let count = 0;
-	return ( (type)=> {
+	return (type)=> {
 		if(type === "Increment") {
 			return count +1;
 		}
@@ -14,16 +14,16 @@ function tempClosure() {
 }
 
 
-Function Currying:
+// Function Currying:
 
 function normal (a,b,c,d) {
 	return a+b+c+d;
 }
 
 function curry (a) {
-	function (b) {
-		function (c) {
-			function (d) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
 				return a+b+c+d;
 			}
 		}
@@ -34,6 +34,6 @@ curry(a)(b)(c)(d);
 
 
 
-Function Composition:
+// Function Composition:
 
 multiply3(add2(x))
