@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold text-white text-center my-6">User Management System</h1>
+        
+        <!-- User Form -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden mb-8">
+            <div class="bg-gradient-to-r from-cyan-400 to-blue-500 p-6">
+                <h2 class="text-2xl font-bold text-white text-center" id="formTitle">Add New User</h2>
+            </div>
+            <form id="userForm" class="p-6 space-y-4">
+                <input type="hidden" id="userId">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <div>
+                    <label for="dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth (DD/MM/YYYY)</label>
+                    <input type="text" id="dob" name="dob" placeholder="DD/MM/YYYY" required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="city" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                    <input type="text" id="city" name="city" required 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="pt-4 flex gap-2">
+                    <button type="submit" id="submitBtn"
+                        class="w-full py-2 px-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Submit
+                    </button>
+                    <button type="button" id="cancelBtn" style="display: none;"
+                        class="w-full py-2 px-4 bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white font-bold rounded-md shadow-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Users Table -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-400 to-pink-500 p-6">
+                <h2 class="text-2xl font-bold text-white text-center">Users List</h2>
+            </div>
+            <div class="p-6 overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date of Birth</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- User rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="noUsers" class="p-6 text-center text-gray-500">
+                No users found. Please add a user.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const userForm = document.getElementById('userForm');
+        const formTitle = document.getElementById('formTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const userIdInput = document.getElementById('userId');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const noUsers = document.getElementById('noUsers');
+
+        // State
+        let isEditing = false;
+        
+        // API URL - determine base URL
+        const baseUrl = ''; // Use empty for same server
+
+        // Fetch all users on page load
+        window.addEventListener('DOMContentLoaded', fetchUsers);
+
+        // Form submission handler
+        userForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const userData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                dob: document.getElementById('dob').value,
+                phone: document.getElementById('phone').value,
+                city: document.getElementById('city').value
+            };
+            
+            try {
+                if (isEditing) {
+                    // Update existing user
+                    await updateUser(userIdInput.value, userData);
+                } else {
+                    // Create new user
+                    await createUser(userData);
+                }
+                
+                resetForm();
+                fetchUsers();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred: ' + error.message);
+            }
+        });
+
+        // Cancel button handler
+        cancelBtn.addEventListener('click', resetForm);
+
+        // API Functions
+        async function fetchUsers() {
+            try {
+                const response = await fetch(`${baseUrl}/api/users`);
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch users: ${response.status} ${response.statusText}`);
+                }
+                
+                const users = await response.json();
+                console.log('Fetched users:', users);
+                renderUsers(users);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                // Display error message in the UI instead of alert
+                noUsers.textContent = 'Error loading users. Please try again later.';
+                noUsers.style.display = 'block';
+                usersTableBody.innerHTML = '';
+            }
+        }
+
+        async function createUser(userData) {
+            const response = await fetch(`${baseUrl}/api/users`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to create user');
+            }
+            
+            alert('User created successfully!');
+            return await response.json();
+        }
+
+        async function updateUser(userId, userData) {
+            const response = await fetch(`${baseUrl}/api/users/${userId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to update user');
+            }
+            
+            alert('User updated successfully!');
+            return await response.json();
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user?')) {
+                return;
+            }
+            
+            const response = await fetch(`${baseUrl}/api/users/${userId}`, {
+                method: 'DELETE'
+            });
+            
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Failed to delete user');
+            }
+            
+            alert('User deleted successfully!');
+            fetchUsers();
+        }
+
+        // Helper Functions
+        function renderUsers(users) {
+            usersTableBody.innerHTML = '';
+            
+            if (!users || users.length === 0) {
+                noUsers.style.display = 'block';
+                return;
+            }
+            
+            noUsers.style.display = 'none';
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                // Format date if it exists and is a valid date
+                let formattedDate = 'N/A';
+                if (user.dob) {
+                    const date = new Date(user.dob);
+                    if (!isNaN(date)) {
+                        formattedDate = `${date.getDate().toString().padStart(2, '0')}/${
+                            (date.getMonth() + 1).toString().padStart(2, '0')}/${
+                            date.getFullYear()}`;
+                    }
+                }
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">${user.firstName || ''} ${user.lastName || ''}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${formattedDate}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${user.phone || 'N/A'}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-500">${user.city || 'N/A'}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editUser('${user._id}')" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</button>
+                        <button onclick="deleteUser('${user._id}')" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                `;
+                
+                usersTableBody.appendChild(row);
+            });
+        }
+
+        async function editUser(userId) {
+            try {
+                const response = await fetch(`${baseUrl}/api/users/${userId}`);
+                const user = await response.json();
+                
+                // Populate form
+                document.getElementById('firstName').value = user.firstName || '';
+                document.getElementById('lastName').value = user.lastName || '';
+                
+                // Format date if it exists
+                if (user.dob) {
+                    const date = new Date(user.dob);
+                    if (!isNaN(date)) {
+                        document.getElementById('dob').value = `${date.getDate().toString().padStart(2, '0')}/${
+                            (date.getMonth() + 1).toString().padStart(2, '0')}/${
+                            date.getFullYear()}`;
+                    } else {
+                        document.getElementById('dob').value = '';
+                    }
+                } else {
+                    document.getElementById('dob').value = '';
+                }
+                
+                document.getElementById('phone').value = user.phone || '';
+                document.getElementById('city').value = user.city || '';
+                userIdInput.value = user._id;
+                
+                // Update UI
+                formTitle.textContent = 'Edit User';
+                submitBtn.textContent = 'Update';
+                cancelBtn.style.display = 'block';
+                isEditing = true;
+                
+                // Scroll to form
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error fetching user:', error);
+                alert('Failed to fetch user details');
+            }
+        }
+
+        function resetForm() {
+            userForm.reset();
+            userIdInput.value = '';
+            formTitle.textContent = 'Add New User';
+            submitBtn.textContent = 'Submit';
+            cancelBtn.style.display = 'none';
+            isEditing = false;
+        }
+
+        // Make functions available globally
+        window.editUser = editUser;
+        window.deleteUser = deleteUser;
+    </script>
+</body>
+</html> 

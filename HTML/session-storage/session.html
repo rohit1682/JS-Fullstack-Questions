@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPAM-Themed Form with Session Storage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-5">
+  <div class="container mx-auto max-w-xl bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">EPAM-Themed Form</h1>
+    
+    <!-- Form Section -->
+    <form id="userForm" class="mb-8">
+      <div class="mb-4">
+        <label for="name" class="block text-gray-700 font-medium mb-2">Name</label>
+        <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your name" required>
+      </div>
+      
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+        <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your email" required>
+      </div>
+      
+      <button type="submit" class="w-full bg-gradient-to-r from-blue-400 to-purple-600 text-white font-semibold py-2 rounded-lg shadow-md hover:from-blue-500 hover:to-purple-700 focus:outline-none">Submit</button>
+    </form>
+
+    <!-- Table Section -->
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">User Data</h2>
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gradient-to-r from-purple-400 to-pink-500 text-white">
+            <th class="p-2 border border-gray-300">Name</th>
+            <th class="p-2 border border-gray-300">Email</th>
+            <th class="p-2 border border-gray-300">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTable">
+          <!-- Dynamic rows will be appended here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Initialize session storage data
+    let users = JSON.parse(sessionStorage.getItem('users')) || [];
+
+    // Render table rows
+    const renderTable = () => {
+      const userTable = document.getElementById('userTable');
+      userTable.innerHTML = '';
+      users.forEach((user, index) => {
+        userTable.innerHTML += `
+          <tr>
+            <td class="p-2 border border-gray-300">${user.name}</td>
+            <td class="p-2 border border-gray-300">${user.email}</td>
+            <td class="p-2 border border-gray-300">
+              <button onclick="editUser(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Edit</button>
+              <button onclick="deleteUser(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+      sessionStorage.setItem('users', JSON.stringify(users));
+    };
+
+    // Handle form submit
+    document.getElementById('userForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+
+      // Add user to array and update table
+      users.push({ name, email });
+      renderTable();
+
+      // Reset the form
+      e.target.reset();
+    });
+
+    // Edit user
+    const editUser = (index) => {
+      const user = users[index];
+      const newName = prompt('Edit Name:', user.name);
+      const newEmail = prompt('Edit Email:', user.email);
+
+      if (newName && newEmail) {
+        users[index] = { name: newName, email: newEmail };
+        renderTable();
+      }
+    };
+
+    // Delete user
+    const deleteUser = (index) => {
+      if (confirm('Are you sure you want to delete this user?')) {
+        users.splice(index, 1);
+        renderTable();
+      }
+    };
+
+    // Initial render of the table
+    renderTable();
+  </script>
+</body>
+</html>
