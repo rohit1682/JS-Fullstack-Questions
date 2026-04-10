@@ -1,0 +1,66 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+  color: #333;
+}
+
+.app {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.header {
+  background: #222831;
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.content {
+  background: #eeeeee;
+  color: #333;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-boundary {
+  background: #ff6f6f;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error-boundary h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.loading-spinner {
+  font-size: 1.5rem;
+  color: #222;
+  margin-top: 50px;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}

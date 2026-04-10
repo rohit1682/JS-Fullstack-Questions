@@ -1,0 +1,18 @@
+// Normal Function Nesting
+
+function multiply1(a) {
+    return function (b) {
+      return function (c) {
+        return a * b * c;
+      };
+    };
+  }
+  
+console.log(multiply1(2)(3)(4)); // Output: 24
+
+
+// Arrow Function Nesting
+
+const multiply2 = (a) => (b) => (c) => a * b * c;
+
+console.log(multiply2(2)(3)(4)); // Output: 24

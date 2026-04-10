@@ -1,0 +1,34 @@
+import React, { useRef, useState } from 'react'
+import Confetti from 'js-confetti'
+import './style.css'
+
+const ThemedContext = React.createContext();
+
+const Themes = ["Light", "Dark", "Red", "Blue"]
+
+const App = () => {
+  const [theme, setTheme] = useState(0);
+  
+  return (
+      <ThemedContext.Provider value={{theme, setTheme}} >
+        <Navbar />
+      </ThemedContext.Provider>
+  );
+}
+
+const Navbar = () => {
+  return <Profile />
+}
+
+const Profile = () => {
+  const {theme, setTheme} = React.useContext(ThemedContext);
+      
+      return (
+    <div>
+      <p>Current theme: {Themes[theme]}</p>
+      <button onClick={() => setTheme((theme+1)%Themes.length)}>Change Theme</button>
+    </div>
+  );
+}
+
+export default App

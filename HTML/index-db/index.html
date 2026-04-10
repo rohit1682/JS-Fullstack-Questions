@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EPAM-Themed Form with IndexedDB</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-5">
+  <div class="container mx-auto max-w-xl bg-white rounded-lg shadow-lg p-8">
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">EPAM-Themed Form with IndexedDB</h1>
+    
+    <!-- Form Section -->
+    <form id="userForm" class="mb-8">
+      <div class="mb-4">
+        <label for="name" class="block text-gray-700 font-medium mb-2">Name</label>
+        <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your name" required>
+      </div>
+      
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+        <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your email" required>
+      </div>
+      
+      <button type="submit" class="w-full bg-gradient-to-r from-blue-400 to-purple-600 text-white font-semibold py-2 rounded-lg shadow-md hover:from-blue-500 hover:to-purple-700 focus:outline-none">Submit</button>
+    </form>
+
+    <!-- Table Section -->
+    <div>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">User Data</h2>
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gradient-to-r from-purple-400 to-pink-500 text-white">
+            <th class="p-2 border border-gray-300">Name</th>
+            <th class="p-2 border border-gray-300">Email</th>
+            <th class="p-2 border border-gray-300">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTable">
+          <!-- Dynamic rows will be appended here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // IndexedDB Initialization
+    const dbName = 'UserDatabase';
+    let db;
+
+    const openDB = () => {
+      const request = indexedDB.open(dbName, 1);
+
+      request.onupgradeneeded = (event) => {
+        db = event.target.result;
+        if (!db.objectStoreNames.contains('users')) {
+          db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
+        }
+      };
+
+      request.onsuccess = (event) => {
+        db = event.target.result;
+        renderTable();
+      };
+
+      request.onerror = (event) => {
+        console.error('Error opening database:', event.target.error);
+      };
+    };
+    openDB();
+
+    // Add user to IndexedDB
+    const addUser = (name, email) => {
+      const transaction = db.transaction('users', 'readwrite');
+      const store = transaction.objectStore('users');
+      store.add({ name, email });
+
+      transaction.oncomplete = () => {
+        renderTable();
+      };
+      transaction.onerror = (event) => {
+        console.error('Error adding user:', event.target.error);
+      };
+    };
+
+    // Get all users from IndexedDB
+    const getUsers = (callback) => {
+      const transaction = db.transaction('users', 'readonly');
+      const store = transaction.objectStore('users');
+      const request = store.getAll();
+
+      request.onsuccess = () => {
+        callback(request.result);
+      };
+      request.onerror = (event) => {
+        console.error('Error fetching users:', event.target.error);
+      };
+    };
+
+    // Update user in IndexedDB
+    const updateUser = (id, updatedData) => {
+      const transaction = db.transaction('users', 'readwrite');
+      const store = transaction.objectStore('users');
+      store.put({ ...updatedData, id });
+
+      transaction.oncomplete = () => {
+        renderTable();
+      };
+      transaction.onerror = (event) => {
+        console.error('Error updating user:', event.target.error);
+      };
+    };
+
+    // Delete user from IndexedDB
+    const deleteUser = (id) => {
+      const transaction = db.transaction('users', 'readwrite');
+      const store = transaction.objectStore('users');
+      store.delete(id);
+
+      transaction.oncomplete = () => {
+        renderTable();
+      };
+      transaction.onerror = (event) => {
+        console.error('Error deleting user:', event.target.error);
+      };
+    };
+
+    // Render the table with all users
+    const renderTable = () => {
+      getUsers((users) => {
+        const userTable = document.getElementById('userTable');
+        userTable.innerHTML = '';
+        users.forEach((user) => {
+          userTable.innerHTML += `
+            <tr>
+              <td class="p-2 border border-gray-300">${user.name}</td>
+              <td class="p-2 border border-gray-300">${user.email}</td>
+              <td class="p-2 border border-gray-300">
+                <button onclick="editUser(${user.id})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Edit</button>
+                <button onclick="deleteUser(${user.id})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+      });
+    };
+
+    // Handle form submission
+    document.getElementById('userForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+
+      addUser(name, email);
+
+      // Reset the form
+      e.target.reset();
+    });
+
+    // Edit user
+    const editUser = (id) => {
+      getUsers((users) => {
+        const user = users.find((u) => u.id === id);
+        const newName = prompt('Edit Name:', user.name);
+        const newEmail = prompt('Edit Email:', user.email);
+
+        if (newName && newEmail) {
+          updateUser(id, { name: newName, email: newEmail });
+        }
+      });
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accordion with Tailwind CSS</title>
+    <!-- Import Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="max-w-2xl mx-auto p-4">
+        <!-- Accordion Container -->
+        <div class="accordion divide-y divide-gray-300 bg-white shadow rounded-lg">
+            <!-- Accordion Item 1 -->
+            <div class="accordion-item">
+                <button class="accordion-title flex w-full items-center justify-between py-4 px-6 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none">
+                    <span>Section 1</span>
+                    <span class="arrow transition-transform transform">▼</span>
+                </button>
+                <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                    <p>This is the content for Section 1. Here you can add any text or HTML elements you want.</p>
+                </div>
+            </div>
+            <!-- Accordion Item 2 -->
+            <div class="accordion-item">
+                <button class="accordion-title flex w-full items-center justify-between py-4 px-6 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none">
+                    <span>Section 2</span>
+                    <span class="arrow transition-transform transform">▼</span>
+                </button>
+                <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                    <p>This is the content for Section 2. It works like a collapsible component with Tailwind styling!</p>
+                </div>
+            </div>
+            <!-- Accordion Item 3 -->
+            <div class="accordion-item">
+                <button class="accordion-title flex w-full items-center justify-between py-4 px-6 text-lg font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none">
+                    <span>Section 3</span>
+                    <span class="arrow transition-transform transform">▼</span>
+                </button>
+                <div class="accordion-content px-6 py-4 text-gray-600 hidden">
+                    <p>This is the content for Section 3. Expand to reveal more!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add JavaScript -->
+    <script>
+        // Script for toggling accordion
+        const accordionItems = document.querySelectorAll('.accordion-item');
+
+        accordionItems.forEach(item => {
+            const title = item.querySelector('.accordion-title');
+            const content = item.querySelector('.accordion-content');
+            const arrow = item.querySelector('.arrow');
+
+            title.addEventListener('click', () => {
+                // Close all other accordions
+                accordionItems.forEach(i => {
+                    if (i !== item) {
+                        i.querySelector('.accordion-content').classList.add('hidden');
+                        i.querySelector('.arrow').classList.remove('rotate-180');
+                    }
+                });
+
+                // Toggle current accordion
+                content.classList.toggle('hidden');
+                arrow.classList.toggle('rotate-180');
+            });
+        });
+    </script>
+</body>
+</html>

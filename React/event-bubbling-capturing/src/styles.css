@@ -1,0 +1,42 @@
+body {
+  font-family: sans-serif;
+}
+
+#grand-parent {
+  background-color: red;
+  height: 500px;
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#grand-parent:hover {
+  cursor: pointer;
+}
+
+#parent {
+  background-color: blue;
+  height: 300px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#parent:hover {
+  cursor: pointer;
+}
+
+#child {
+  background-color: green;
+  height: 100px;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#child:hover {
+  cursor: pointer;
+}

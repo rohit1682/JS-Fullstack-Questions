@@ -1,0 +1,54 @@
+import React, { useRef, useState } from 'react'
+import './style.css'
+
+const App = () => {
+
+  const data = [
+    "Apple",
+    "Banana",
+    "Orange",
+    "Mango",
+    "Pineapple",
+    "Grapes",
+  ];
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
+  const filteredData = data.filter((item) =>
+    item.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  const handleClick = () => {
+    setSearchTerm(inputValue);
+    // console.log(searchTerm);
+  }
+  
+  return (
+    <>
+      <div style={{padding: "20px"}}>
+        <input 
+          style={{padding: "10px", margin: "10px"}}
+          type="text"
+          placeholder="Search..."
+          value={inputValue}
+          onChange= {(e) => {setInputValue(e.target.value)}}
+          />
+        <button onClick= {() => {handleClick()}}>
+          Submit</button>
+      </div>
+
+      <div>
+        <ul>
+          {filteredData.map( (fruit,index) => (
+            <li key={index}>{fruit}</li>
+          ))}
+        </ul>
+      </div>
+    </>
+    
+  )
+}
+
+
+export default App

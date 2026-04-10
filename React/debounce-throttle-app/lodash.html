@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lodash Debounce & Throttle Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .log {
+      margin-top: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔍 Debounced Search Bar</h2>
+  <input type="text" id="searchInput" placeholder="Type to search..." />
+  <div class="log" id="searchLog"></div>
+
+  <hr />
+
+  <h2>📜 Throttled Scroll Logger</h2>
+  <div style="height: 2000px;">Scroll down to see throttling in action...</div>
+
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const searchLog = document.getElementById("searchLog");
+
+    // API call simulation
+    function searchAPI(query) {
+      searchLog.textContent = `Searching for: "${query}" at ${new Date().toLocaleTimeString()}`;
+      console.log("API Call:", query);
+    }
+
+    // Debounced function (300ms delay)
+    const debouncedSearch = _.debounce(searchAPI, 300);
+
+    // Input event handler
+    searchInput.addEventListener("input", (e) => {
+      const query = e.target.value.trim();
+      debouncedSearch(query);
+    });
+
+    // -----------------------------
+
+    // Throttled scroll handler
+    const throttledScroll = _.throttle(() => {
+      console.log("Scroll position:", window.scrollY);
+    }, 1000);
+
+    window.addEventListener("scroll", throttledScroll);
+  </script>
+
+</body>
+</html>
