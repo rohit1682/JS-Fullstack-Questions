@@ -1,0 +1,7 @@
+<p>list-component works!</p>
+
+@for (item of itemList; track item.name) {
+    <button type="button" (click)="selectItem(item)">{{item.name}}</button>
+}
+
+<p>Selected Item: {{selectedItem?.name}}</p>

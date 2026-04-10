@@ -1,0 +1,7 @@
+<p>parent-component works!</p>
+
+<!-- <app-child-component [list]="itemList" [selectItem]="selectItem.bind(this)"></app-child-component> -->
+
+<app-child-component [list]="itemList" (itemEmitter)="selectItem($event)"></app-child-component>
+
+<p>Selected Item: {{ selectedItem?.name }}</p>

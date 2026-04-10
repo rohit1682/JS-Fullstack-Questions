@@ -1,0 +1,5 @@
+<p>child-component works!</p>
+
+@for (item of list; track item.name) {
+    <button type="button" (click)="selectItem(item)">{{ item.name }}</button> 
+}
