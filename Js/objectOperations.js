@@ -11,7 +11,7 @@ function deepClone(value) {
         return value.map(deepClone);
     }
  
-    const clonedObj = {};
+    const clonedObj = Object.create(Object.getPrototypeOf(obj));
 
     for (const key in value) {
         if (value.hasOwnProperty(key)) {

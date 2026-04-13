@@ -13,7 +13,7 @@ function cloneDeep(val, seen = new WeakMap()) {
         return arr;
     }
     
-    let result = {};
+    let result = Object.create(Object.getPrototypeOf(obj));
     seen.set(val, result);
 
     for(const key in val) {
