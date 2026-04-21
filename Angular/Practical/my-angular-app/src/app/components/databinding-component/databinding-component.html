@@ -1,0 +1,20 @@
+<p>databinding-component works!</p>
+
+<p>Name: {{ name[index] }}</p>
+<p>Age: {{ age[index] }}</p>
+
+<input [type]="inputType[0]" [(ngModel)]="myText" value="name[index]">
+
+<p>{{ myText }}</p>
+
+<input 
+  type="text"
+  [ngModel]="mySignal()" 
+  (ngModelChange)="mySignal.set($event)" 
+/>
+
+<p>Signal Text: {{mySignal()}}</p>
+
+<br>
+
+<button type="button" (click)="changeIndex()">Change Index</button>

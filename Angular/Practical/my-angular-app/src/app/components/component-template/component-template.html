@@ -1,0 +1,25 @@
+<p>component-template works!</p>
+
+<!-- 1 -->
+<!-- <p>{{ isText1 ? text1 : text2 }}</p> -->
+
+<!-- 2 -->
+<!-- <p *ngIf="isText1; else alt">{{ text1 }}</p>
+
+<ng-template #alt>
+  <p>{{ text2 }}</p>
+</ng-template> -->
+
+<!-- 3 -->
+<ng-template #showText1>
+  <p>{{ text1 }}</p>
+</ng-template>
+
+<ng-template #showText2>
+  <p>{{ text2 }}</p>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="isText1 ? showText1 : showText2">
+</ng-container>
+
+<button type="button" (click)="toggleText()">Click</button>

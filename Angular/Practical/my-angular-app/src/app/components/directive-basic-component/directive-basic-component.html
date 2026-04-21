@@ -1,0 +1,30 @@
+<p>directive-basic-component works!</p>
+
+<div>
+    <div [ngClass]="bgColor()">
+        <p>NgClass - Adds dynamic classes to elements</p>
+    </div>
+
+    <div [ngStyle]="{'background-color' : myStyleColor ? 'green' : 'red'}">
+        
+        <p>NgStyle need a key value paid data as it adds dynamic styles to an element</p>
+    </div>
+</div>
+
+<div>
+    <div>
+        <p>This is for changing NgClass</p>
+        <button (click)="changeBgColor('red')">Red</button>
+        <button (click)="changeBgColor('blue')">Blue</button>
+    </div>
+
+    <div>
+        <p>This is for changing NgStyle</p>
+        <button type="button" (click)="toggleColor()">Click to Toggle</button>
+    </div>
+</div>
+
+<div [ngStyle]="{'color': textHover ? textColor : ''}" (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseOut()">
+    <p>This text color will change one mouse hovers</p>
+</div>

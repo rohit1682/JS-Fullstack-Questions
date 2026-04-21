@@ -1,0 +1,37 @@
+<h1>reactive-forms-component works!</h1>
+
+<h2>This is an Example of basic FormControl</h2>
+
+<input type="text" name="name" [formControl]="color" placeholder="Enter color">
+
+<div [ngStyle]="{'color': color.value}">
+    <p>This text will chnage Color when the color is updated</p>
+</div>
+
+<button type="button" (click)="changeColorToGreen()">Green</button>
+
+<h2>This is an Example of FormGroup</h2>
+
+<form [formGroup]="profileForm"  (ngSubmit)="handleSubmit()">
+    <label for="name"></label>
+    <input type="text" name="name" id="name" placeholder="Enter Name" formControlName="name">
+
+    <div *ngIf="profileForm.get('name') as nameCtrl">
+        <div *ngIf="nameCtrl.errors?.['forbiddenNameValidator'] && (nameCtrl.touched || nameCtrl.dirty)">
+            This name is not allowed
+        </div>
+    </div>
+
+    <label for="age"></label>
+    <input type="text" name="age" id="age" placeholder="Enter age" formControlName="age">
+
+    <button type="submit" [disabled]="!profileForm.valid">Submit</button>
+</form>
+
+<div>
+    <p>Name: {{profileForm.value.name}}</p>
+    <p>Age: {{profileForm.value.age}}</p>
+</div>
+
+
+<h2>This is an Example of FormBuilder</h2>
