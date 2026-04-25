@@ -1,6 +1,7 @@
-name,age,city,email
-John,25,New York,john@example.com
-Jane,30,San Francisco,jane@example.com
-Alice,28,London,alice@example.com
-Bob,35,Berlin,bob@example.com
-Charlie,22,Tokyo,charlie@example.com
+name,age,email,department
+John,25,john@example.com,Engineering
+Jane,30,jane@example.com,Marketing
+Alice,28,alice@example.com,Design
+Bob,35,bob@example.com,Sales
+Charlie,22,charlie@example.com,Engineering
+Rohan,23,rohan@example.com,Support

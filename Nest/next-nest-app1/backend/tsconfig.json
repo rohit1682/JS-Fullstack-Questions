@@ -1,15 +1,19 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "node16",
     "target": "ES2021",
     "outDir": "dist",
     "rootDir": "src",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "isolatedModules": true,
     "strict": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "skipLibCheck": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "node16",
+    "types": ["node", "jest", "multer"]
   },
   "include": ["src/**/*"]
 }

@@ -1,7 +1,14 @@
 import { Module } from '@nestjs/common';
-import { UploadModule } from './upload/upload.module';
+import { ConfigModule } from '@nestjs/config';
+import { CsvModule } from './csv/csv.module';
 
 @Module({
-  imports: [UploadModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: true,
+    }),
+    CsvModule,
+  ],
 })
 export class AppModule {}

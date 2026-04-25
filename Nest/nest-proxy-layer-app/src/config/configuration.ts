@@ -11,9 +11,15 @@ export interface BigCommerceConfig {
   timeoutMs: number;
 }
 
+export interface ExternalApiConfig {
+  baseUrl: string;
+  timeoutMs: number;
+}
+
 export interface RootConfig {
   app: AppConfig;
   bigCommerce: BigCommerceConfig;
+  externalApi: ExternalApiConfig;
 }
 
 const loadConfiguration = (): RootConfig => ({
@@ -30,6 +36,13 @@ const loadConfiguration = (): RootConfig => ({
     storeHash: process.env.BIGCOMMERCE_B2B_STORE_HASH ?? '',
     timeoutMs: Number.parseInt(
       process.env.BIGCOMMERCE_B2B_REQUEST_TIMEOUT_MS ?? '15000',
+      10,
+    ),
+  },
+  externalApi: {
+    baseUrl: process.env.API_BASE_URL ?? 'https://jsonplaceholder.typicode.com',
+    timeoutMs: Number.parseInt(
+      process.env.API_REQUEST_TIMEOUT_MS ?? '10000',
       10,
     ),
   },

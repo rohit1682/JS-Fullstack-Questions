@@ -5,10 +5,16 @@ import { useRef, useState } from 'react';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 type ParsedResponse = {
-  filename: string;
-  rowCount: number;
-  fields: string[];
-  data: Record<string, unknown>[];
+  valid: Array<{
+    name: string;
+    age: number;
+    email: string;
+    department?: string;
+  }>;
+  errors: Array<{
+    row: number;
+    issues: string[];
+  }>;
 };
 
 export default function HomePage() {
@@ -40,13 +46,14 @@ export default function HomePage() {
         body: formData,
       });
       if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Request failed: ${res.status}`);
+        const body = (await res.json().catch(() => null)) as { message?: string } | null;
+        throw new Error(body?.message || `Request failed: ${res.status}`);
       }
       const data = (await res.json()) as ParsedResponse;
       setResult(data);
-    } catch (err: any) {
-      setError(err.message || 'Upload failed');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Upload failed';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -138,35 +145,58 @@ export default function HomePage() {
       {result && (
         <section className="card">
           <div className="results-header">
-            <h2 className="results-title">{result.filename}</h2>
+            <h2 className="results-title">Validation Results</h2>
             <div className="results-meta">
               <span className="chip">
-                <strong>{result.rowCount}</strong> rows
+                <strong>{result.valid.length}</strong> valid
               </span>
               <span className="chip">
-                <strong>{result.fields.length}</strong> columns
+                <strong>{result.errors.length}</strong> invalid
               </span>
             </div>
           </div>
 
-          {result.data.length === 0 ? (
-            <div className="empty">No rows to display.</div>
+          {result.valid.length === 0 ? (
+            <div className="empty">No valid rows to display.</div>
           ) : (
             <div className="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    {result.fields.map((f) => (
-                      <th key={f}>{f}</th>
-                    ))}
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Department</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {result.data.map((row, i) => (
-                    <tr key={i}>
-                      {result.fields.map((f) => (
-                        <td key={f}>{String(row[f] ?? '')}</td>
-                      ))}
+                  {result.valid.map((row) => (
+                    <tr key={`${row.email}-${row.name}`}>
+                      <td>{row.name}</td>
+                      <td>{row.age}</td>
+                      <td>{row.email}</td>
+                      <td>{row.department ?? ''}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {result.errors.length > 0 && (
+            <div className="table-wrap" style={{ marginTop: 16 }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Row</th>
+                    <th>Issues</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.errors.map((rowError) => (
+                    <tr key={rowError.row}>
+                      <td>{rowError.row}</td>
+                      <td>{rowError.issues.join(', ')}</td>
                     </tr>
                   ))}
                 </tbody>
